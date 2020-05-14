@@ -1,6 +1,7 @@
 CREATE DATABASE [HOTEL 5 ESTRELLAS]
 USE [HOTEL 5 ESTRELLAS]
 
+---------- Tablas -----------------
 CREATE TABLE CLIENTES(
 idCliente int primary key,
 NombC varchar(30),
@@ -257,7 +258,8 @@ SELECT * FROM TABLA ORDER BY CANT_DIAS_TOTALES ASC BETWEEN FECHA1 AND FECHA2
 
 --7. Reporte de los empleados totales que laboran en el hotel, clasificado por departamentos.
 SELECT * FROM EMPLEADOS E INNER JOIN DEPTO D ON E.idDepto = D.idDepto
-SELECT * FROM EMPLEADOS WHERE ID_EMPLEADO = (SELECT ID_EMPLEADO FROM DEPTO GROUP BY DEPTO);
+
+SELECT * FROM EMPLEADOS WHERE ID_EMPLEADO = (SELECT ID_EMPLEADO FROM DEPTO GROUP BY DEPTO);
 
 --8. Reporte de los empleados de mostrador con mayor bono obtenido por el registro de los huéspedes en base a una fecha determinada.
 SELECT idEmp FROM FACTURA WHERE MAX(TOTALPAGO) AND FECHA = @FECHA;
