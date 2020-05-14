@@ -224,7 +224,7 @@ ADD FOREIGN KEY (idVenta) REFERENCES CONTROL_VENTA(idVenta);
 
 ------- Consultas ---------------------------------
 --1. Factura del servicio de estadía en Hotel.
-SELECT * FROM FACTURA;
+SELECT * FROM FACTURA; J
 
 --2. Reporte de habitaciones disponibles clasificado por tipo de habitación.
 SELECT Habitaciones FROM ((DETALLE 
