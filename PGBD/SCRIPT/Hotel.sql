@@ -225,32 +225,58 @@ ADD FOREIGN KEY (idVenta) REFERENCES CONTROL_VENTA(idVenta);
 ------- Consultas ---------------------------------
 --1. Factura del servicio de estadía en Hotel.
 SELECT * FROM FACTURA;
+
 --2. Reporte de habitaciones disponibles clasificado por tipo de habitación.
 SELECT Habitaciones FROM ((DETALLE 
 INNER JOIN FACTURA ON DETALLE.idFAc = FACTURA.idFac)
-INNER JOIN HABITACIONES ON DETALLE.idHab = HABITACIONES.idHab) WHERE idCAT = @idCat
+INNER JOIN HABITACIONES ON DETALLE.idHab = HABITACIONES.idHab) WHERE idCAT = @idCat;
+
+SELECT * FROM HABITACIONES WHERE ID_HABIT = (SELECT ID_HABIT FROM CATEGORIA GROUP BY TIPO);
+
+SELECT * FROM HABITACIONES WHERE DISPONIBILIDAD = 1 GROUP BY TIPO;
+
 --3. Reporte de habitaciones ocupadas y número de huéspedes por fecha determinada.
 SELECT CANT_HAB,CANT_HUE FROM DETALLE WHERE FECHA = @FECHA
+
+SELECT * FROM DETALLE WHERE DISPONIBILIDAD = 0 BETWEEN FECHA1 AND FECHA2
+
 --4. Reporte de ocupación del hotel clasificado por temporada en un rango de fechas dado.
+SELECT * FROM CONTROL_VENTA BETWEEN FECHA1 AND FECHA2 AS TEMPORADA2020
 
 --5. Reporte del tipo de habitación con su descripción y números de habitaciones disponible del hotel.
 SELECT A.TIPO,A.DESCRIPCION,D.CANT_HAB FROM(( HABITACIONES H
 INNER JOIN CAT A ON A.idCat = H.id.Cat)
 INNER JOIN DETALLE D ON D.idHab = H.idHab)
+
+SELECT * FROM CATEGORIA WHERE DIS_HABIT = 1;
+
 --6. Reporte de los registros con mayor tiempo de ocupación por un rango de fechas determinado.
 SELECT idFac, idCliente from FACTURA where FECHAIN = @FECHAIN AND FECHAOUT = @FECHAOUT
+
+SELECT * FROM TABLA ORDER BY CANT_DIAS_TOTALES ASC BETWEEN FECHA1 AND FECHA2
+
 --7. Reporte de los empleados totales que laboran en el hotel, clasificado por departamentos.
 SELECT * FROM EMPLEADOS E INNER JOIN DEPTO D ON E.idDepto = D.idDepto
+SELECT * FROM EMPLEADOS WHERE ID_EMPLEADO = (SELECT ID_EMPLEADO FROM DEPTO GROUP BY DEPTO);
+
 --8. Reporte de los empleados de mostrador con mayor bono obtenido por el registro de los huéspedes en base a una fecha determinada.
-SELECT idEmp FROM FACTURA WHERE MAX(TOTALPAGO) AND FECHA = @FECHA
+SELECT idEmp FROM FACTURA WHERE MAX(TOTALPAGO) AND FECHA = @FECHA;
+
+SELECT idEmp FROM FACTURA WHERE MAX(TOTALPAGO) BETWEEN FECHA1 AND FECHA2;
+
 --9. Reporte de las ventas realizadas (Registro de habitación, servicios adquiridos) en un determinado rango de fechas.
-SELECT * FROM VENTAS
+SELECT * FROM CONTROL_VENTA
+
 --10. Reporte de ganancias obtenidas por servicios adquiridos clasificados por tipo de servicio y en base a un rango de fechas dado.
 SELECT * FROM FACTURA WHHERE (PAGO - TOTALPAGO) = 
+
 --11. Reporte de quejas registradas en base a un rango de fechas dado y clasificado por el departamento al que fue aplicada la queja.
+SELECT * FROM QUEJA WHERE idDep BETWEEN FECHA1 AND FECHA2
 
 --12. Reporte de número de huéspedes registrados y clasificados por el medio de registro (Internet, Teléfono, Presencial) y muestre las ganancias obtenidas en base a rango de fechas dado.
 SELECT * FROM CLIENTES
+SELECT * FROM CLIENTES GROUP BY TIPOREGISTRO
+
 --13. Reporte del departamento con mejor rating de satisfacción, en base a un rango de fechas dado.
 
 
