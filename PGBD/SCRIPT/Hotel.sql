@@ -292,7 +292,7 @@ VALUES
 
 ------- Consultas ---------------------------------
 --1. Factura del servicio de estadía en Hotel.
-SELECT * FROM FACTURA; J
+SELECT * FROM FACTURA; 
 
 --2. Reporte de habitaciones disponibles clasificado por tipo de habitación.
 SELECT Habitaciones FROM ((DETALLE 
