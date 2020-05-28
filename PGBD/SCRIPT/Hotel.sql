@@ -130,14 +130,15 @@ TotalHab int
 
 CREATE TABLE DEPTO(
 idDepto int primary key,
-Depto varchar(50),
-idPuntuacion int
+Depto varchar(50)
 )
 
 CREATE TABLE PUNTUACION(
 idPuntuacion int primary key,
+Puntuacion int,
 Comentario varchar(100) null,
-idCliente int
+idCliente int,
+idDepto int
 )
 
 CREATE TABLE VERIFICACION(
@@ -165,8 +166,8 @@ ADD FOREIGN KEY (idCliente) REFERENCES CLIENTES(idCliente);
 ALTER TABLE EMPLEADOS
 ADD FOREIGN KEY (idDepto) REFERENCES DEPTO(idDepto);
 
-ALTER TABLE DEPTO
-ADD FOREIGN KEY (idPuntuacion) REFERENCES PUNTUACION(idPuntuacion);
+ALTER TABLE PUNTUACION
+ADD FOREIGN KEY (idDepto) REFERENCES DEPTO(idDepto);
 
 ALTER TABLE RESERVACIONES
 ADD FOREIGN KEY (idCliente) REFERENCES CLIENTES(idCliente);
@@ -203,6 +204,72 @@ ADD FOREIGN KEY (idHab) REFERENCES HABITACIONES(idHab);
 
 ALTER TABLE DETALLE
 ADD FOREIGN KEY (idVenta) REFERENCES CONTROL_VENTA(idVenta);
+
+ALTER TABLE FACTURA
+ADD FOREIGN KEY (numPago) REFERENCES MODO_PAGO(numPago);
+
+
+------- Registros --------------------------------
+INSERT INTO CLIENTES (idCliente,NombC,ApeP,ApeM,edad,FechaNac,Dir,Tel,Cel,Email,RFC,LugarProv,Estatus)
+VALUES
+(100, 'Jesus', 'Lopez', 'Soto', 26,'1994/05/23', 'Otay 4390' , 3458793, 6642344532, 'jesus_lopez@gmail.com', 'LOSJ9405231H0', 'Tijuana,B.C.', 'Activo'),
+(101, 'John', 'Cena', 'Jhonson', 48, '1968/08/03', 'La Postal #2324', 9304393, 6643904938, 'john_cena@gmail.com', 'CEJJ6808238F2', 'Tijuana,B.C.', 'Activo'),
+(102, 'Jimena', 'Acosta', 'Fernandez', 30,'1990/03/14', 'Otay #4460' , 3458433, 6642345432, 'jimena_acosta@gmail.com', 'ACFL9003142J0', 'Tijuana,B.C.', 'Activo'),
+(103, 'Walter', 'White', 'Flinn', 40,'1980/03/13', 'Zona centro #7890' , 3453453, 66412345122, 'walter_white@gmail.com', 'WAFW8003139S0', 'Tijuana,B.C.', 'Inactivo'),
+(104, 'Keanu', 'Reeves', 'Wick', 55,'1963/09/03', 'Villa Fontana #5235' , 3453452, 6634343253, 'keanu_reeves@gmail.com', 'REWK6309036L1', 'Tijuana,B.C.', 'Activo');
+
+INSERT INTO ACOMPA (idAcompa,idCliente,NombA,ApeP,ApeM,FechaNacA,Email) 
+VALUES
+(1000,100,'Jorge','Mendez','Lopez','2001/12/17','jorge_mendez@gmail.com' ),
+(1001,100,'Guadalupe','Mendez','Lopez','1999/11/13','jose_mendez@gmail.com' ),
+(1002,101,'Fernando','Martinez','Perez','1998/09/27','fernando_martinez@gmail.com' ),
+(1003,103,'Alfonso','Corona','Sanchez','2000/04/11','alfonso_corona@gmail.com' ),
+(1004,104,'Diego','Maradona','Hernandez','1995/12/16','diego_maradona@gmail.com' );
+
+INSERT INTO QUEJA (idQueja,idCliente,Queja)
+VALUES
+(2000,100,'Pesimo servicio del Depto de Servicio al cuarto'),
+(2001,103,'Mala comunicacion en recepcion'),
+(2002,104,'Demora de atencion en el comedor')
+
+INSERT INTO PUNTUACION (idPuntuacion,Comentario,idCliente,Puntuacion)
+VALUES
+(3000,'Excelente Servicio',100,10,4000),
+(3001,'Buen Servicio',101,8,4001),
+(3002,'Servicio aceptable',102,7,4002),
+(3003,'Mal servicio',103,5,4003),
+(3004,'Pesimo Servicio',104,1,4004)
+
+
+INSERT INTO DEPTO (idDepto,Depto)
+VALUES
+(4000,'Servicio de atencion al cuarto'),
+(4001,'Alberca'),
+(4002,'Comedor'),
+(4003,'Limpieza'),
+(4004,'Recepcion'),
+(4005,'Atencion al cliente'),
+(4006,'Spa'),
+(4007,'Gimnasio'),
+(4008,'Restaurant'),
+(4009,'Salon de eventos'),
+(4010,'Bar'),
+(4011,'Discoteca'),
+(4012,'Campo de Golf'),
+(4013,'Casino'),
+(4014,'Tours de Parques de entretenimiento'),
+(4015,'Museos'),
+(4016,'Zona historicas'),
+(4017,'Servicios de traslados')
+
+
+INSERT INTO EMPLEADOS (idDepto,NombC,ApeP,ApeM,edad,FechaNac,Dir,Tel,Cel,Email,RFC,Puesto,idDepto)
+VALUES
+(5000,'Jesus','Ibarra','Hernandez',25,'1995/01/21','Morita','3424543','6642345432','jesus_ibarra@gmail.com','IBHJ9501216Y2','Mantenimiento de Gimnasio',4007),
+(5001,'Maria','Sanchez','Ramirez',26,'1994/02/25','Dorado','3424532','6643526432','maria_sanchez@gmail.com','SARM9402256R2','Recepcionista',4004),
+(5002,'Abel','Camargo','Segundo',24,'1996/03/12','El lago','4245465','6642343523','abel_camargo@gmail.com','CASA9603124E4','Bartender',4010),
+(5003,'Kevin','Salazar','Olivas',23,'1997/04/01','Mariano','3424598','6642348472','kevin_salazar@gmail.com','SAOK9704016U6','Mantenimiento de Campo de Golf',4012),
+(5004,'Lizeth','Hernandez','Florez',21,'1999/05/14','Florido','3424587','6642334364','lizeth_hernandez@gmail.com','HEFL9905147L1','Mantenimiento de Alberca',4001)
 
 
 
