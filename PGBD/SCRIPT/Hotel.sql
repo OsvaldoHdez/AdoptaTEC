@@ -1,7 +1,6 @@
 CREATE DATABASE [HOTEL 5 ESTRELLAS]
 USE [HOTEL 5 ESTRELLAS]
 
----------- Tablas -----------------
 CREATE TABLE CLIENTES(
 idCliente int primary key,
 NombC varchar(30),
@@ -15,7 +14,7 @@ Cel int,
 Email varchar(30),
 RFC varchar(20),
 LugarProv varchar(30),
-Estatus varchar(20)
+Estatus varchar(20),
 )
 
 CREATE TABLE ACOMPA(
@@ -43,7 +42,8 @@ CREATE TABLE DETALLE (
 idVenta int,
 idHab int,
 Cantidad_Hab int,
-Precio int
+Precio int,
+Dias int
 )
 
 CREATE TABLE HABITACIONES(
@@ -116,7 +116,12 @@ idCliente int,
 idTipo int,
 Peticion varchar(100),
 Fecha date,
-Pago int
+HotelStart date,
+HotalEnd date,
+cant_hab int,
+Dias int,
+Pago int,
+Hora time
 )
 
 CREATE TABLE CONTROL_VENTA(
@@ -125,17 +130,17 @@ idEmp int,
 idFac int,
 idPaq int,
 idServ int,
-TotalHab int
+TotalHab int,
+Fecha date
 )
 
 CREATE TABLE DEPTO(
 idDepto int primary key,
-Depto varchar(50)
+Depto varchar(50),
 )
 
 CREATE TABLE PUNTUACION(
 idPuntuacion int primary key,
-Puntuacion int,
 Comentario varchar(100) null,
 idCliente int,
 idDepto int
@@ -143,7 +148,8 @@ idDepto int
 
 CREATE TABLE VERIFICACION(
 idRes int,
-idFac int
+idFac int,
+Confirmacion int
 )
 
 CREATE TABLE TIPO_CLIENTE(
@@ -166,8 +172,8 @@ ADD FOREIGN KEY (idCliente) REFERENCES CLIENTES(idCliente);
 ALTER TABLE EMPLEADOS
 ADD FOREIGN KEY (idDepto) REFERENCES DEPTO(idDepto);
 
-ALTER TABLE PUNTUACION
-ADD FOREIGN KEY (idDepto) REFERENCES DEPTO(idDepto);
+ALTER TABLE DEPTO
+ADD FOREIGN KEY (idPuntuacion) REFERENCES PUNTUACION(idPuntuacion);
 
 ALTER TABLE RESERVACIONES
 ADD FOREIGN KEY (idCliente) REFERENCES CLIENTES(idCliente);
@@ -208,7 +214,7 @@ ADD FOREIGN KEY (idVenta) REFERENCES CONTROL_VENTA(idVenta);
 ALTER TABLE FACTURA
 ADD FOREIGN KEY (numPago) REFERENCES MODO_PAGO(numPago);
 
-
+ALTER TABLE PUNTUACION ADD Puntuacion int
 ------- Registros --------------------------------
 INSERT INTO CLIENTES (idCliente,NombC,ApeP,ApeM,edad,FechaNac,Dir,Tel,Cel,Email,RFC,LugarProv,Estatus)
 VALUES
@@ -216,7 +222,9 @@ VALUES
 (101, 'John', 'Cena', 'Jhonson', 48, '1968/08/03', 'La Postal #2324', 9304393, 6643904938, 'john_cena@gmail.com', 'CEJJ6808238F2', 'Tijuana,B.C.', 'Activo'),
 (102, 'Jimena', 'Acosta', 'Fernandez', 30,'1990/03/14', 'Otay #4460' , 3458433, 6642345432, 'jimena_acosta@gmail.com', 'ACFL9003142J0', 'Tijuana,B.C.', 'Activo'),
 (103, 'Walter', 'White', 'Flinn', 40,'1980/03/13', 'Zona centro #7890' , 3453453, 66412345122, 'walter_white@gmail.com', 'WAFW8003139S0', 'Tijuana,B.C.', 'Inactivo'),
-(104, 'Keanu', 'Reeves', 'Wick', 55,'1963/09/03', 'Villa Fontana #5235' , 3453452, 6634343253, 'keanu_reeves@gmail.com', 'REWK6309036L1', 'Tijuana,B.C.', 'Activo');
+(104, 'Keanu', 'Reeves', 'Wick', 55,'1963/09/03', 'Villa Fontana #5235' , 3453452, 6634343253, 'keanu_reeves@gmail.com', 'REWK6309036L1', 'Tijuana,B.C.', 'Activo'));
+
+select*from CLIENTES
 
 INSERT INTO ACOMPA (idAcompa,idCliente,NombA,ApeP,ApeM,FechaNacA,Email) 
 VALUES
@@ -271,30 +279,73 @@ VALUES
 (5003,'Kevin','Salazar','Olivas',23,'1997/04/01','Mariano','3424598','6642348472','kevin_salazar@gmail.com','SAOK9704016U6','Mantenimiento de Campo de Golf',4012),
 (5004,'Lizeth','Hernandez','Florez',21,'1999/05/14','Florido','3424587','6642334364','lizeth_hernandez@gmail.com','HEFL9905147L1','Mantenimiento de Alberca',4001)
 
+INSERT INTO RESERVACIONES (idRes, idCliente, idTipo, Peticion, Fecha, Pago)
+VALUES
+(6000, 100, 7000, );
+
+INSERT INTO TIPO_CLIENTE (idTipo, Tipo)
+VALUES
+();
+
+INSERT INTO PROMOCIONES (idProm, idTipo, Promo, FechaOP, FechaFN)
+VALUES
+();
+
+INSERT INTO VERIFICACION (idRes, idFac)
+VALUES
+();
+
+INSERT INTO FACTURA (idFac, numFac, Fecha, Paquete, Servicios, numPago, Pago, TotalPago)
+VALUES
+();
+
+INSERT INTO MODO_PAGO (numPago, nombre, Otros_Det, Fecha)
+VALUES
+();
+
+INSERT INTO CONTROL_VENTA (idVenta, idEmp,idFac, idPaq, idServ, TotalHab)
+VALUES
+();
+
+INSERT INTO PAQ_SERV (idPaq, Descripcion, Duracion, Precio)
+VALUES
+();
+
+INSERT INTO INV_SERV (idServ, Servicio, Tipo, Precio)
+VALUES
+();
+
+INSERT INTO DETALLE (idVenta,idHab,Cantidad_Hab,Precio)
+VALUES
+();
+
+INSERT INTO CATEGORIA (idCat,Tipo,Descripcion)
+VALUES
+();
 
 
 ------- Triggers ----------------------------------
---1. Selección de un tipo de habitación y que esta permita sugerirle múltiples paquetes de servicios interno o externos al cliente.
+--1. Selecciï¿½n de un tipo de habitaciï¿½n y que esta permita sugerirle mï¿½ltiples paquetes de servicios interno o externos al cliente.
 
---2. Cancelación de una reservación que ya se había completado.
+--2. Cancelaciï¿½n de una reservaciï¿½n que ya se habï¿½a completado.
 
---3. Modificación de los paquetes que había seleccionado el huésped.
+--3. Modificaciï¿½n de los paquetes que habï¿½a seleccionado el huï¿½sped.
 
---4. Realizar una auditoría de los agentes de mostrador, los cuales presente el nombre del
--- agente, el tipo de habitación que registro, cuantos días mantendrá dicho registro, y que
--- paquetes de servicios internos y externos dio de alta con el registro de habitación, si el
--- agente hizo registros de clientes con más de 3 días de hospedaje, obtiene un bono de
--- $380.00 por registro, si es de 5 días tendrá un bono de $500.00 pesos por registro y si es
--- de 10 días en adelante obtendrá un bono de $1500.00 por hospedaje.
+--4. Realizar una auditorï¿½a de los agentes de mostrador, los cuales presente el nombre del
+-- agente, el tipo de habitaciï¿½n que registro, cuantos dï¿½as mantendrï¿½ dicho registro, y que
+-- paquetes de servicios internos y externos dio de alta con el registro de habitaciï¿½n, si el
+-- agente hizo registros de clientes con mï¿½s de 3 dï¿½as de hospedaje, obtiene un bono de
+-- $380.00 por registro, si es de 5 dï¿½as tendrï¿½ un bono de $500.00 pesos por registro y si es
+-- de 10 dï¿½as en adelante obtendrï¿½ un bono de $1500.00 por hospedaje.
 
---5. Proceso que permita registrar un nuevo paquete de servicios o simple servicios con precios para cada tipo de habitación que se contemple.
+--5. Proceso que permita registrar un nuevo paquete de servicios o simple servicios con precios para cada tipo de habitaciï¿½n que se contemple.
 
 
 ------- Consultas ---------------------------------
---1. Factura del servicio de estadía en Hotel.
+--1. Factura del servicio de estadï¿½a en Hotel.
 SELECT * FROM FACTURA; 
 
---2. Reporte de habitaciones disponibles clasificado por tipo de habitación.
+--2. Reporte de habitaciones disponibles clasificado por tipo de habitaciï¿½n.
 SELECT Habitaciones FROM ((DETALLE 
 INNER JOIN FACTURA ON DETALLE.idFAc = FACTURA.idFac)
 INNER JOIN HABITACIONES ON DETALLE.idHab = HABITACIONES.idHab) WHERE idCAT = @idCat;
@@ -303,22 +354,22 @@ SELECT * FROM HABITACIONES WHERE ID_HABIT = (SELECT ID_HABIT FROM CATEGORIA GROU
 
 SELECT * FROM HABITACIONES WHERE DISPONIBILIDAD = 1 GROUP BY TIPO;
 
---3. Reporte de habitaciones ocupadas y número de huéspedes por fecha determinada.
+--3. Reporte de habitaciones ocupadas y nï¿½mero de huï¿½spedes por fecha determinada.
 SELECT CANT_HAB,CANT_HUE FROM DETALLE WHERE FECHA = @FECHA
 
 SELECT * FROM DETALLE WHERE DISPONIBILIDAD = 0 BETWEEN FECHA1 AND FECHA2
 
---4. Reporte de ocupación del hotel clasificado por temporada en un rango de fechas dado.
+--4. Reporte de ocupaciï¿½n del hotel clasificado por temporada en un rango de fechas dado.
 SELECT * FROM CONTROL_VENTA BETWEEN FECHA1 AND FECHA2 AS TEMPORADA2020
 
---5. Reporte del tipo de habitación con su descripción y números de habitaciones disponible del hotel.
+--5. Reporte del tipo de habitaciï¿½n con su descripciï¿½n y nï¿½meros de habitaciones disponible del hotel.
 SELECT A.TIPO,A.DESCRIPCION,D.CANT_HAB FROM(( HABITACIONES H
 INNER JOIN CAT A ON A.idCat = H.id.Cat)
 INNER JOIN DETALLE D ON D.idHab = H.idHab)
 
 SELECT * FROM CATEGORIA WHERE DIS_HABIT = 1;
 
---6. Reporte de los registros con mayor tiempo de ocupación por un rango de fechas determinado.
+--6. Reporte de los registros con mayor tiempo de ocupaciï¿½n por un rango de fechas determinado.
 SELECT idFac, idCliente from FACTURA where FECHAIN = @FECHAIN AND FECHAOUT = @FECHAOUT
 
 SELECT * FROM TABLA ORDER BY CANT_DIAS_TOTALES ASC BETWEEN FECHA1 AND FECHA2
@@ -328,12 +379,12 @@ SELECT * FROM EMPLEADOS E INNER JOIN DEPTO D ON E.idDepto = D.idDepto
 
 SELECT * FROM EMPLEADOS WHERE ID_EMPLEADO = (SELECT ID_EMPLEADO FROM DEPTO GROUP BY DEPTO);
 
---8. Reporte de los empleados de mostrador con mayor bono obtenido por el registro de los huéspedes en base a una fecha determinada.
+--8. Reporte de los empleados de mostrador con mayor bono obtenido por el registro de los huï¿½spedes en base a una fecha determinada.
 SELECT idEmp FROM FACTURA WHERE MAX(TOTALPAGO) AND FECHA = @FECHA;
 
 SELECT idEmp FROM FACTURA WHERE MAX(TOTALPAGO) BETWEEN FECHA1 AND FECHA2;
 
---9. Reporte de las ventas realizadas (Registro de habitación, servicios adquiridos) en un determinado rango de fechas.
+--9. Reporte de las ventas realizadas (Registro de habitaciï¿½n, servicios adquiridos) en un determinado rango de fechas.
 SELECT * FROM CONTROL_VENTA
 
 --10. Reporte de ganancias obtenidas por servicios adquiridos clasificados por tipo de servicio y en base a un rango de fechas dado.
@@ -342,10 +393,10 @@ SELECT * FROM FACTURA WHHERE (PAGO - TOTALPAGO) =
 --11. Reporte de quejas registradas en base a un rango de fechas dado y clasificado por el departamento al que fue aplicada la queja.
 SELECT * FROM QUEJA WHERE idDep BETWEEN FECHA1 AND FECHA2
 
---12. Reporte de número de huéspedes registrados y clasificados por el medio de registro (Internet, Teléfono, Presencial) y muestre las ganancias obtenidas en base a rango de fechas dado.
+--12. Reporte de nï¿½mero de huï¿½spedes registrados y clasificados por el medio de registro (Internet, Telï¿½fono, Presencial) y muestre las ganancias obtenidas en base a rango de fechas dado.
 SELECT * FROM CLIENTES
 SELECT * FROM CLIENTES GROUP BY TIPOREGISTRO
 
---13. Reporte del departamento con mejor rating de satisfacción, en base a un rango de fechas dado.
+--13. Reporte del departamento con mejor rating de satisfacciï¿½n, en base a un rango de fechas dado.
 
 
