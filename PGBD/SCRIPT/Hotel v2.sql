@@ -9,8 +9,8 @@ ApeM varchar(15),
 edad int,
 FechaNac date,
 Dir varchar(50),
-Tel int,
-Cel int,
+Tel varchar(50),
+Cel varchar(50),
 Email varchar(30),
 RFC varchar(20),
 LugarProv varchar(30),
@@ -70,8 +70,8 @@ ApeM varchar(15),
 edad int,
 FechaNac date,
 Dir varchar(50),
-Tel int,
-Cel int,
+Tel varchar(50),
+Cel varchar(50),
 Email varchar(30),
 RFC varchar(20),
 Puesto varchar(30),
@@ -96,9 +96,7 @@ Precio int
 CREATE TABLE PROMOCIONES(
 idProm int primary key,
 idTipo int,
-Promo varchar(100),
-FechaOP date,
-FechaFN date
+Promo varchar(200),
 )
 
 CREATE TABLE QUEJA(
@@ -138,7 +136,8 @@ idServ int,
 TotalHab int,
 Fecha date
 )
-
+select*from CONTROL_VENTA
+select*from VERIFICACION
 CREATE TABLE DEPTO(
 idDepto int primary key,
 Depto varchar(50),
@@ -161,6 +160,8 @@ CREATE TABLE TIPO_CLIENTE(
 idTipo int primary key,
 Tipo varchar(50)
 )
+
+
 
 ----- Llaves Foraneas -----
 ALTER TABLE ACOMPA
@@ -192,7 +193,6 @@ ADD FOREIGN KEY (idRes) REFERENCES RESERVACIONES(idRes);
 
 ALTER TABLE VERIFICACION
 ADD FOREIGN KEY (idVenta) REFERENCES CONTROL_VENTA(idVenta);
-
 
 ALTER TABLE HABITACIONES
 ADD FOREIGN KEY (idCat) REFERENCES CATEGORIA(idCat);
@@ -233,13 +233,12 @@ ADD FOREIGN KEY (idEmp) REFERENCES EMPLEADOS(idEmp);
 ------- Registros --------------------------------
 INSERT INTO CLIENTES (idCliente,NombC,ApeP,ApeM,edad,FechaNac,Dir,Tel,Cel,Email,RFC,LugarProv,Estatus)
 VALUES
-(100, 'Jesus', 'Lopez', 'Soto', 26,'1994/05/23', 'Otay 4390' , 3458793, 6642344532, 'jesus_lopez@gmail.com', 'LOSJ9405231H0', 'Tijuana,B.C.', 'Activo'),
-(101, 'John', 'Cena', 'Jhonson', 48, '1968/08/03', 'La Postal #2324', 9304393, 6643904938, 'john_cena@gmail.com', 'CEJJ6808238F2', 'Tijuana,B.C.', 'Activo'),
-(102, 'Jimena', 'Acosta', 'Fernandez', 30,'1990/03/14', 'Otay #4460' , 3458433, 6642345432, 'jimena_acosta@gmail.com', 'ACFL9003142J0', 'Tijuana,B.C.', 'Activo'),
-(103, 'Walter', 'White', 'Flinn', 40,'1980/03/13', 'Zona centro #7890' , 3453453, 66412345122, 'walter_white@gmail.com', 'WAFW8003139S0', 'Tijuana,B.C.', 'Inactivo'),
-(104, 'Keanu', 'Reeves', 'Wick', 55,'1963/09/03', 'Villa Fontana #5235' , 3453452, 6634343253, 'keanu_reeves@gmail.com', 'REWK6309036L1', 'Tijuana,B.C.', 'Activo'));
+(100, 'Jesus', 'Lopez', 'Soto', 26,'1994/05/23', 'Otay 4390' , '3458793', '6642344532', 'jesus_lopez@gmail.com', 'LOSJ9405231H0', 'Tijuana,B.C.', 'Activo'),
+(101, 'John', 'Cena', 'Jhonson', 48, '1968/08/03', 'La Postal #2324', '9304393', '6643904938', 'john_cena@gmail.com', 'CEJJ6808238F2', 'Tijuana,B.C.', 'Activo'),
+(102, 'Jimena', 'Acosta', 'Fernandez', 30,'1990/03/14', 'Otay #4460' , '3458433', '6642345432', 'jimena_acosta@gmail.com', 'ACFL9003142J0', 'Tijuana,B.C.', 'Activo'),
+(103, 'Walter', 'White', 'Flinn', 40,'1980/03/13', 'Zona centro #7890' , '3453453', '66412345122', 'walter_white@gmail.com', 'WAFW8003139S0', 'Tijuana,B.C.', 'Inactivo'),
+(104, 'Keanu', 'Reeves', 'Wick', 55,'1963/09/03', 'Villa Fontana #5235' , '3453452', '6634343253', 'keanu_reeves@gmail.com', 'REWK6309036L1', 'Tijuana,B.C.', 'Activo');
 
-select*from CLIENTES
 
 INSERT INTO ACOMPA (idAcompa,idCliente,NombA,ApeP,ApeM,FechaNacA,Email) 
 VALUES
@@ -255,14 +254,13 @@ VALUES
 (2001,103,'Mala comunicacion en recepcion'),
 (2002,104,'Demora de atencion en el comedor')
 
-INSERT INTO PUNTUACION (idPuntuacion,Comentario,idCliente,Puntuacion)
+INSERT INTO PUNTUACION (Comentario,Puntuacion,idDepto,idCliente)
 VALUES
-(3000,'Excelente Servicio',100,10,4000),
-(3001,'Buen Servicio',101,8,4001),
-(3002,'Servicio aceptable',102,7,4002),
-(3003,'Mal servicio',103,5,4003),
-(3004,'Pesimo Servicio',104,1,4004)
-
+('Excelente Servicio',10,4000,100),
+('Buen Servicio',8,4001,101),
+('Servicio aceptable',7,4002,102),
+('Mal servicio',5,4003,103),
+('Pesimo Servicio',1,4004,104)
 
 INSERT INTO DEPTO (idDepto,Depto)
 VALUES
@@ -285,8 +283,7 @@ VALUES
 (4016,'Zona historicas'),
 (4017,'Servicios de traslados')
 
-
-INSERT INTO EMPLEADOS (idDepto,NombC,ApeP,ApeM,edad,FechaNac,Dir,Tel,Cel,Email,RFC,Puesto,idDepto)
+INSERT INTO EMPLEADOS (idEmp,NombC,ApeP,ApeM,edad,FechaNac,Dir,Tel,Cel,Email,RFC,Puesto,idDepto)
 VALUES
 (5000,'Jesus','Ibarra','Hernandez',25,'1995/01/21','Morita','3424543','6642345432','jesus_ibarra@gmail.com','IBHJ9501216Y2','Mantenimiento de Gimnasio',4007),
 (5001,'Maria','Sanchez','Ramirez',26,'1994/02/25','Dorado','3424532','6643526432','maria_sanchez@gmail.com','SARM9402256R2','Recepcionista',4004),
@@ -294,13 +291,13 @@ VALUES
 (5003,'Kevin','Salazar','Olivas',23,'1997/04/01','Mariano','3424598','6642348472','kevin_salazar@gmail.com','SAOK9704016U6','Mantenimiento de Campo de Golf',4012),
 (5004,'Lizeth','Hernandez','Florez',21,'1999/05/14','Florido','3424587','6642334364','lizeth_hernandez@gmail.com','HEFL9905147L1','Mantenimiento de Alberca',4001)
 
-INSERT INTO RESERVACIONES (idRes, idCliente, idTipo, Peticion, Fecha, Pago)
+INSERT INTO RESERVACIONES (idRes, idCliente, idTipo, Peticion, Fecha, HotelStart, HotalEnd, cant_hab, Dias, Pago, Hora)
 VALUES
-(6000, 100, 7000,'buena vista, cercano a la alberca','2020/03/21',500 ),
-(6001, 101, 7001,'buena vista, cercano a la alberca','2020/04/21',500 ),
-(6002, 102, 7000,'buena vista, cercano a la alberca','2020/05/21',500 ),
-(6003, 103, 7002,'buena vista, cercano a la alberca','2020/02/21',500 ),
-(6004, 104, 7001,'buena vista, cercano a la alberca','2020/01/21',500 );
+(6000, 100, 7000,'buena vista, cercano a la alberca','2020/03/21','2020/03/24','2020/03/25', 1,1, 500,'01:14:23' ),
+(6001, 101, 7001,'buena vista, cercano a la alberca','2020/04/21','2020/04/22','2020/04/23',1,1,500 ,'01:14:23'),
+(6002, 102, 7000,'buena vista, cercano a la alberca','2020/05/21','2020/05/25','2020/05/26',1,1,500 ,'01:14:23'),
+(6003, 103, 7002,'buena vista, cercano a la alberca','2020/02/21','2020/02/24','2020/02/25',1,1,500 ,'01:14:23'),
+(6004, 104, 7001,'buena vista, cercano a la alberca','2020/01/21','2020/01/25','2020/01/26',1,1, 500 ,'01:14:23');
 
 INSERT INTO TIPO_CLIENTE (idTipo, Tipo)
 VALUES
@@ -309,36 +306,36 @@ VALUES
 (7002,'Malo'),
 (7003,'Excelente');
 
-INSERT INTO PROMOCIONES (idProm, idTipo, Promo, FechaOP, FechaFN)
+INSERT INTO PROMOCIONES (idProm, idTipo, Promo)
 VALUES
 (7004,7003,'Primavera: paquete alberca, spa,buffet y parques recreativos ilimitados por un fin de semana por 5000 pesos'),
 (7005,7000,'Verano: Paquete alberca + parques recreativos ilimitados por un fin de semana por 4000 pesos'),
-(7006,7001, 'Oto�o: Paquete Jacuzzi/spa + parque recreativos por un fin de semana a 3000 pesos'),
-(7007, 7002,'Invierno: Paquete 2x1 por un fin de semana a 2000 pesos')
+(7006,7001, 'Otoño: Paquete Jacuzzi/spa + parque recreativos por un fin de semana a 3000 pesos'),
+(7007, 7002,'Invierno: Paquete 2x1 por un fin de semana a 2000 pesos');
 
-INSERT INTO VERIFICACION (idRes, idFac)
+INSERT INTO VERIFICACION (idRes, idVenta, Confirmacion)
 VALUES
-(6000, 8000, 1),
-(6001, 8001, 1),
-(6002, 8002, 1),
-(6003, 8003, 1),
-(6004, 8004, 1);
+(6000, 11000, 1),
+(6001, 11001, 1),
+(6002, 11002, 1),
+(6003, 11003, 1),
+(6004, 11004, 1);
 
 INSERT INTO FACTURA (idFac, numFac, Fecha, Paquete, Servicios, numPago, Pago, TotalPago)
 VALUES
 (8000, 9000, '2020/01/21','Primavera','ninguno',10000,5000,5050),
 (8001, 9001, '2020/02/21','Invierno','ninguno',10001,5000,2050),
-(8002, 9002, '2020/03/21','Oto�o','ninguno',10002,5000,3050),
+(8002, 9002, '2020/03/21','Otoño','ninguno',10002,5000,3050),
 (8003, 9003, '2020/04/21','Verano','ninguno',10003,5000,4050),
 (8004, 9004, '2020/05/21','Verano','ninguno',10004,5000,4050);
 
 INSERT INTO MODO_PAGO (numPago, nombre, Otros_Det, Fecha)
 VALUES
+(10000,'x','x','2020/01/21'),
 (10001,'x','x','2020/01/21'),
 (10002,'x','x','2020/01/21'),
 (10003,'x','x','2020/01/21'),
-(10004,'x','x','2020/01/21'),
-(10005,'x','x','2020/01/21');
+(10004,'x','x','2020/01/21');
 
 INSERT INTO CONTROL_VENTA (idVenta, idEmp,idFac, idPaq, idServ, TotalHab)
 VALUES
@@ -348,37 +345,41 @@ VALUES
 (11003,5003,8003,12003,13013,2),
 (11004,5004,8004,12000,13013,2);
 
-INSERT INTO PAQ_SERV (idPaq, Descripcion, Duracion, Precio)
+INSERT INTO PAQ_SERV (idPaq,Paquete, Descripcion, Duracion, Precio)
 VALUES
 (12000,'Primavera','x','3 dias',5000),
 (12001,'Verano','x','3 dias',4000),
-(12002,'Oto�o','x','3 dias',3000),
+(12002,'Otoño','x','3 dias',3000),
 (12003,'Invierno','x','3 dias',2000);
 
 INSERT INTO INV_SERV (idServ, Servicio, Tipo, Precio)
 VALUES
-(13000,'Servicio de atencion al cuarto'),
-(13001,'Alberca'),
-(13002,'Comedor'),
-(13003,'Limpieza'),
-(13004,'Recepcion'),
-(13005,'Atencion al cliente'),
-(13006,'Spa'),
-(13007,'Gimnasio'),
-(13008,'Restaurant'),
-(13009,'Salon de eventos'),
-(13010,'Bar'),
-(13011,'Discoteca'),
-(13012,'Campo de Golf'),
-(13013,'Casino'),
-(13014,'Tours de Parques de entretenimiento'),
-(13015,'Museos'),
-(13016,'Zona historicas'),
-(13017,'Servicios de traslados')
+(13000,'Servicio de atencion al cuarto','Interno',200),
+(13001,'Alberca','Externo',100),
+(13002,'Comedor','Externo',100),
+(13003,'Limpieza','Interno',100),
+(13004,'Recepcion','Interno',100),
+(13005,'Atencion al cliente','Interno',0),
+(13006,'Spa','Interno',200),
+(13007,'Gimnasio','Interno',50),
+(13008,'Restaurant','Interno',300),
+(13009,'Salon de eventos','Interno',300),
+(13010,'Bar','Interno',200),
+(13011,'Discoteca','Interno',100),
+(13012,'Campo de Golf','Interno',100),
+(13013,'Casino','Interno',100),
+(13014,'Tours de Parques de entretenimiento','Externo',300),
+(13015,'Museos','Externo',50),
+(13016,'Zona historicas','Externo',50),
+(13017,'Servicios de traslados','Externo',50)
 
-INSERT INTO DETALLE (idVenta,idHab,Cantidad_Hab,Precio)
+INSERT INTO DETALLE (idVenta,idHab,Cantidad_Hab,Precio,Dias)
 VALUES
-(11000,14000,2,500);
+(11000,14000,1,500,1),
+(11001,14001,1,500,1),
+(11002,14002,1,500,1),
+(11003,14003,1,500,1),
+(11004,14004,1,500,1);
 
 INSERT INTO HABITACIONES (idHab,Detalles,Precio,Stock,idCat)
 VALUES
