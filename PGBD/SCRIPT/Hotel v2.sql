@@ -1,7 +1,6 @@
 CREATE DATABASE [HOTEL 5 ESTRELLAS]
 USE [HOTEL 5 ESTRELLAS]
 
-
 CREATE TABLE CLIENTES(
 idCliente int primary key,
 NombC varchar(30),
@@ -162,8 +161,6 @@ CREATE TABLE TIPO_CLIENTE(
 idTipo int primary key,
 Tipo varchar(50)
 )
-
-
 
 ----- Llaves Foraneas -----
 ALTER TABLE ACOMPA
@@ -401,11 +398,27 @@ VALUES
 
 ------- Triggers ----------------------------------
 --1. Selecci�n de un tipo de habitaci�n y que esta permita sugerirle m�ltiples paquetes de servicios interno o externos al cliente.
-
+CREATE TRIGGER INSERT_RESERVACIÓN ON RESERVACIONES
+FOR INSERT
+AS
+SELECT * FROM PAQ_SERV
+SELECT * FROM INV_SERV
+PRINT('Inserción éxitosa')
+GO
 
 --2. Cancelaci�n de una reservaci�n que ya se hab�a completado.
+CREATE TRIGGER CANCEL_RESERVACION ON RESERVACIONES
+FOR DELETE
+AS
+PRINT('Cancelación de reservación éxitosa')
+GO
 
 --3. Modificaci�n de los paquetes que hab�a seleccionado el hu�sped.
+CREATE TRIGGER UPDATE_CONTROL_VENTA ON CONTROL_VENTA
+FOR UPDATE
+AS
+PRINT('Actualización éxitosa')
+GO
 
 --4. Realizar una auditor�a de los agentes de mostrador, los cuales presente el nombre del
 -- agente, el tipo de habitaci�n que registro, cuantos d�as mantendr� dicho registro, y que
@@ -415,7 +428,12 @@ VALUES
 -- de 10 d�as en adelante obtendr� un bono de $1500.00 por hospedaje.
 
 --5. Proceso que permita registrar un nuevo paquete de servicios o simple servicios con precios para cada tipo de habitaci�n que se contemple.
-
+CREATE TRIGGER INSERT_PAQ ON INV_SERV
+FOR INSERT
+AS
+SELECT * FROM HABITACIONES
+PRINT('Inserción éxitosa')
+GO
 
 ------- Consultas ---------------------------------
 --1. Factura del servicio de estad�a en Hotel.
@@ -469,3 +487,105 @@ SELECT * FROM CLIENTES GROUP BY TIPOREGISTRO
 
 --13. Reporte del departamento con mejor rating de satisfacci�n, en base a un rango de fechas dado.
 SELECT * FROM DEPTO WHERE idDepto = (SELECT idDepto FROM PUNTUACION GROUP BY Puntuacion);
+
+/*Generar como mínimo 5 procedimientos almacenados o los que sean necesarios que
+permitan mejorar el rendimiento con respecto al proceso de reservación y registro de
+huéspedes, también se puede considerar el manejo de rangos de fechas o promociones.*/
+--1. RESERVACIONES
+CREATE PROCEDURE dbo.InsertarReservación 
+@idRes int,
+@idCliente int,
+@idTipo int,
+@Peticion varchar(100),
+@Fecha date,
+@HotelStart date,
+@HotalEnd date,
+@cant_hab int,
+@Dias int,
+@Pago int,
+@Hora time
+AS
+INSERT INTO dbo.RESERVACIONES (idRes, idCliente, idTipo, Peticion, Fecha, HotelStart, HotalEnd, cant_hab, Dias, Pago, Hora) 
+VALUES (@idRes, @idCliente, @idTipo, @Peticion, @Fecha, @HotelStart, @HotalEnd, @cant_hab, @Dias, @Pago, @Hora)
+
+--2. REGISTRO CLIENTES
+CREATE PROCEDURE dbo.InsertarClientes 
+@idCliente int,
+@NombC varchar(30),
+@ApeP varchar(15),
+@ApeM varchar(15),
+@edad int,
+@FechaNac date,
+@Dir varchar(50),
+@Tel int,
+@Cel int,
+@Email varchar(30),
+@RFC varchar(20),
+@LugarProv varchar(30),
+@Estatus varchar(20)
+AS
+INSERT INTO dbo.CLIENTES (idCliente, NombC, ApeP, ApeM, edad, FechaNac, Dir, Tel, Cel, Email, RFC, LugarProv, Estatus) 
+VALUES (@idCliente, @NombC, @ApeP, @ApeM, @edad, @FechaNac, @Dir, @Tel, @Cel, @Email, @RFC, @LugarProv, @Estatus)
+
+--3. Actualizar promociones
+CREATE PROCEDURE dbo.ActualizarPromociones
+@idProm int,
+@idTipo int,
+@Promo varchar(100),
+@FechaOP date,
+@FechaFN date
+AS
+UPDATE dbo.PROMOCIONES 
+SET 
+idProm = @idProm,
+idTipo = @idTipo,
+Promo = @Promo,
+FechaOP = @FechaOP,
+FechaFN = @FechaFN
+WHERE idProm = @idProm
+
+--4. Actualizar datos de reservación
+CREATE PROCEDURE dbo.ActualizarReservaciones
+@idRes int,
+@idCliente int,
+@idTipo int,
+@Peticion varchar(100),
+@Fecha date,
+@HotelStart date,
+@HotalEnd date,
+@cant_hab int,
+@Dias int,
+@Pago int,
+@Hora time
+AS
+UPDATE dbo.RESERVACIONES 
+SET 
+idRes = @idRes,
+idCliente = @idCliente,
+idTipo = @idTipo,
+Peticion = @Peticion,
+Fecha = @Fecha,
+HotelStart = @HotelStart,
+HotalEnd = @HotalEnd,
+cant_hab = @cant_hab,
+Dias = @Dias,
+Pago = @Pago,
+Hora = @Hora
+WHERE idRes = @idRes
+
+--5. Actualizar habitaciones
+CREATE PROCEDURE dbo.ActualizarHabitaciones
+@idHab int,
+@Detalles varchar(100),
+@Precio int,
+@Stock int,
+@idCat int
+AS
+UPDATE dbo.HABITACIONES
+SET 
+idHab = @idHab,
+Detalles = @Detalles,
+Precio = @Precio,
+Stock = @Stock,
+idCat = @idCat
+WHERE idHab = @idHab
